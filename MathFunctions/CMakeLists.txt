@@ -1,4 +1,17 @@
-add_library(MathFunctions SHARED mysqrt.cpp)
+# first we add the executable that generates the table
+# add the binary tree directory to the search path for include files
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-install (TARGETS MathFunctions DESTINATION lib)
-install (FILES MathFunctions.h DESTINATION include)
+add_executable(MakeTable MakeTable.cpp)
+# add the command to generate the source code
+add_custom_command(
+	OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/Table.h
+	COMMAND MakeTable ${CMAKE_CURRENT_BINARY_DIR}/Table.h
+	DEPENDS MakeTable
+)
+
+# add the main library
+add_library(MathFunctions SHARED mysqrt.cpp ${CMAKE_CURRENT_BINARY_DIR}/Table.h)
+
+install(TARGETS MathFunctions DESTINATION lib)
+install(FILES MathFunctions.h DESTINATION include)
