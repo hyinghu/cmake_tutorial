@@ -1,2 +1,1 @@
-
 double mysqrt(double x);
